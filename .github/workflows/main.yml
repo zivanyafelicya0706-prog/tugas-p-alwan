@@ -1,0 +1,56 @@
+from pathlib import Path
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+
+SOURCE_DIR = Path("cpp")
+OUTPUT_DIR = Path("output")
+
+
+def convert_file(source):
+    output = OUTPUT_DIR / f"{source.stem}.xlsx"
+    lines = source.read_text(
+        encoding="utf-8-sig"
+    ).splitlines()
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Kode C++"
+
+    ws.append(["Nomor Baris", "Kode C++"])
+
+    for cell in ws[1]:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill(
+            "solid", fgColor="217346"
+        )
+
+    for number, line in enumerate(lines, start=1):
+        ws.append([number, line])
+
+    ws.column_dimensions["A"].width = 15
+    ws.column_dimensions["B"].width = 100
+    ws.freeze_panes = "A2"
+    ws.auto_filter.ref = ws.dimensions
+
+    for row in ws.iter_rows(min_row=2):
+        row[0].alignment = Alignment(horizontal="center")
+        row[1].font = Font(name="Consolas", size=10)
+        row[1].alignment = Alignment(vertical="top")
+
+    wb.save(output)
+    print(f"Berhasil: {output}")
+
+
+def main():
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    files = sorted(SOURCE_DIR.rglob("*.cpp"))
+
+    if not files:
+        raise SystemExit("Tidak ada file .cpp di folder cpp/")
+
+    for source in files:
+        convert_file(source)
+
+
+if __name__ == "__main__":
+    main()
