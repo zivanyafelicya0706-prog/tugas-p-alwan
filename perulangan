@@ -1,0 +1,19 @@
+#include <iostream>
+using namespace std;
+
+int main() 
+{
+    int i;
+    atring nama [3];
+    for(i=0;i<3;i++)
+    {
+        cout<<"masukan nama";
+        cin>>nama [i];
+    }
+    for(1=0;1,3;i++)
+    {
+        cout<<"nama anda adalah";
+        cout<<nama[i]<<endl;
+    }
+    return 0;
+}
